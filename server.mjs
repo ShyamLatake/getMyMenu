@@ -1,6 +1,8 @@
 import express, { json } from "express";
 import cors from "cors";
 import connectDB from "./config/db.mjs";
+import expressLayouts from "express-ejs-layouts";
+import ejsLayouts from "express-ejs-layouts";
 
 import authRoutes from "./routes/authRoutes.mjs";
 import restaurantRoutes from "./routes/restaurantRoutes.mjs";
@@ -14,12 +16,18 @@ const app = express();
 // Middleware
 app.use(cors());
 app.use(json());
+app.use(expressLayouts);
+app.use(ejsLayouts);
 
 // Connect to Database
 connectDB();
 
 // For ejs
-app.set("view engine", "ejs");
+app.set("view engine", "ejs"); // Set EJS as the template engine
+app.set("views", "views"); 
+
+app.use(express.static("public"));
+
 
 // Routes
 app.use("/api/auth", authRoutes);

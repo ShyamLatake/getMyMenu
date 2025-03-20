@@ -1,0 +1,139 @@
+<style>
+  .filter-container {
+    display: flex;
+    /*flex-wrap: wrap;
+      justify-content: center; */
+    gap: 10px;
+    overflow-x: auto;
+    white-space: nowrap;
+    /* padding: 10px; */
+  }
+
+  .filter-btn {
+    padding: 10px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    background-color: #007bff;
+    color: white;
+  }
+
+  .filter-btn.active {
+    background-color: #0056b3;
+  }
+
+  .menu-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 15px;
+  }
+
+  .category {
+    width: 100%;
+    max-width: 600px;
+    background: white;
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .category-title {
+    font-size: 18px;
+    font-weight: bold;
+    background: #007bff;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    text-align: center;
+  }
+
+  .subcategory-title {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    margin-top: 10px;
+  }
+
+  .menu-item {
+    display: flex;
+    background: #ffffff;
+    border-radius: 10px;
+    margin: 5px 0;
+    padding: 10px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+  }
+
+  .menu-item img {
+    width: 60px;
+    height: 60px;
+    border-radius: 8px;
+    margin-right: 10px;
+  }
+
+  .menu-item-info {
+    flex-grow: 1;
+  }
+
+  .price {
+    font-weight: bold;
+    color: green;
+  }
+</style>
+
+<!-- Filter Buttons -->
+<div class="filter-container">
+  <button class="filter-btn active" onclick="filterCategory('all')">All</button>
+  <% Object.keys(groupedMenu).forEach(primary => { %>
+  <button class="filter-btn" onclick="filterCategory('<%= primary %>')">
+    <%= primary %>
+  </button>
+  <% }); %>
+</div>
+
+<!-- Menu List -->
+<div class="menu-container">
+  <% Object.keys(groupedMenu).forEach(primary => { %>
+  <div class="category" data-category="<%= primary %>">
+    <div class="category-title"><%= primary %></div>
+
+    <% Object.keys(groupedMenu[primary]).forEach(secondary => { %>
+    <div class="subcategory-title"><%= secondary %></div>
+
+    <% Object.keys(groupedMenu[primary][secondary]).forEach(sub => { %>
+    <div class="subcategory-title">🔹 <%= sub %></div>
+
+    <% groupedMenu[primary][secondary][sub].forEach(item => { %>
+    <div class="menu-item">
+      <img
+        src="<%= item.image || 'https://via.placeholder.com/60' %>"
+        alt="<%= item.itemName %>"
+      />
+      <div class="menu-item-info">
+        <h4><%= item.itemName %></h4>
+        <p><%= item.description %></p>
+        <p class="price">💰 ₹<%= item.price %></p>
+      </div>
+    </div>
+    <% }); %> <% }); %> <% }); %>
+  </div>
+  <% }); %>
+</div>
+
+<script>
+  function filterCategory(category) {
+    document.querySelectorAll(".category").forEach((cat) => {
+      if (category === "all" || cat.dataset.category === category) {
+        cat.style.display = "block";
+      } else {
+        cat.style.display = "none";
+      }
+    });
+
+    document
+      .querySelectorAll(".filter-btn")
+      .forEach((btn) => btn.classList.remove("active"));
+    event.target.classList.add("active");
+  }
+</script>

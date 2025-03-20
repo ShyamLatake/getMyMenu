@@ -4,9 +4,117 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Restaurant QR Code</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f4f4f9;
+            box-sizing: border-box;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: #ffffff;
+            border-radius: 15px;
+            /* box-shadow: 0 4px 15px rgba(0,0,0,0.2); */
+            padding: 40px;
+            text-align: center;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        img {
+            width: 250px;
+            height: 250px;
+            margin-bottom: 20px;
+            border: 2px solid #333;
+            border-radius: 10px;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        button, input {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #444;
+            color: #fff;
+        }
+
+        input {
+            width: 100%;
+            border: 1px solid #ccc;
+            padding: 8px;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        button.download {
+            background-color: #28a745;
+            color: #fff;
+        }
+
+        button.copy {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        button.download:hover {
+            background-color: #218838;
+        }
+
+        button.copy:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
 <body>
-    <h1>QR Code for <%= restaurant.name %></h1>
-    <img src="<%= restaurant.qrCodeUrl %>" alt="QR Code">
+    <div class="container">
+        <h1>QR Code for <%= restaurant.name %></h1>
+        <img id="qrCodeImage" src="<%= restaurant.qrCodeUrl %>" alt="QR Code">
+
+        <div class="controls">
+            <button class="download" onclick="downloadQRCode()">Download QR Code</button>
+            <input type="text" id="qrCodeUrl" value="<%= restaurant.menuUrl %>" readonly>
+            <button class="copy" onclick="copyToClipboard()">Copy URL</button>
+        </div>
+    </div>
+
+    <script>
+        function downloadQRCode() {
+            const qrCodeImage = document.getElementById('qrCodeImage');
+            const link = document.createElement('a');
+            link.href = qrCodeImage.src;
+            link.download = '<%= restaurant.name %>_QRCode.png';
+            link.click();
+        }
+
+        function copyToClipboard() {
+            const qrCodeUrl = document.getElementById('qrCodeUrl');
+            qrCodeUrl.select();
+            document.execCommand('copy');
+            alert('QR Code URL copied to clipboard!');
+        }
+    </script>
 </body>
 </html>
